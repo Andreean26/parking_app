@@ -34,7 +34,7 @@ func (pc *ParkingController) Park(carNumber string) string {
 
 	lot := pc.repo.GetParkingLot()
 	car := models.NewCar(carNumber)
-	
+
 	slotNumber, err := lot.Park(car)
 	if err != nil {
 		return "Sorry, parking lot is full"
@@ -50,14 +50,14 @@ func (pc *ParkingController) Leave(carNumber string, hours int) string {
 	}
 
 	lot := pc.repo.GetParkingLot()
-	
+
 	slotNumber, err := lot.Leave(carNumber)
 	if err != nil {
 		return fmt.Sprintf("Registration number %s not found", carNumber)
 	}
 
 	charge := models.CalculateCharge(hours)
-	return fmt.Sprintf("Registration number %s with Slot Number %d free with Charge $%d", 
+	return fmt.Sprintf("Registration number %s with Slot Number %d free with Charge $%d",
 		carNumber, slotNumber, charge)
 }
 

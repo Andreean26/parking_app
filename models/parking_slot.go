@@ -2,8 +2,8 @@ package models
 
 // ParkingSlot represents a single parking slot in the lot
 type ParkingSlot struct {
-	Number int   // Slot number starting from 1
-	Car    *Car  // Car occupying the slot or nil if free
+	Number int  // Slot number starting from 1
+	Car    *Car // Car occupying the slot or nil if free
 }
 
 // NewParkingSlot creates a new empty parking slot

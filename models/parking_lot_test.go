@@ -59,7 +59,7 @@ func TestParkCar(t *testing.T) {
 
 func TestParkingLotFull(t *testing.T) {
 	lot := NewParkingLot(2)
-	
+
 	lot.Park(NewCar("KA-01-HH-1234"))
 	lot.Park(NewCar("KA-01-HH-9999"))
 

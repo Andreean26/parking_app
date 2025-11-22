@@ -7,10 +7,10 @@ import (
 
 // ParkingLot manages parking slots and operations
 type ParkingLot struct {
-	Capacity  int                    // Maximum number of cars
-	Slots     map[int]*ParkingSlot   // Map of slot number to ParkingSlot
-	FreeSlots *MinHeap               // Min-heap to track free slot numbers
-	CarToSlot map[string]int         // Map car number to slot number for quick lookup
+	Capacity  int                  // Maximum number of cars
+	Slots     map[int]*ParkingSlot // Map of slot number to ParkingSlot
+	FreeSlots *MinHeap             // Min-heap to track free slot numbers
+	CarToSlot map[string]int       // Map car number to slot number for quick lookup
 }
 
 // MinHeap implements heap.Interface for tracking free slot numbers

@@ -28,7 +28,7 @@ func main() {
 	// Initialize repository and controller
 	repo := database.NewMemoryRepository()
 	parkingController := controllers.NewParkingController(repo)
-	
+
 	// Create command runner
 	runner := controllers.NewCommandRunner(parkingController)
 
