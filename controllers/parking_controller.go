@@ -57,7 +57,7 @@ func (pc *ParkingController) Leave(carNumber string, hours int) string {
 	}
 
 	charge := models.CalculateCharge(hours)
-	return fmt.Sprintf("Registration number %s with Slot Number %d free with Charge $%d",
+	return fmt.Sprintf("Registration number %s with Slot Number %d is free with Charge $%d",
 		carNumber, slotNumber, charge)
 }
 
