@@ -1,0 +1,13 @@
+create_parking_lot 3
+park KA-01-AA-1111
+park KA-02-BB-2222
+park KA-03-CC-3333
+park KA-04-DD-4444
+status
+leave KA-02-BB-2222 3
+park KA-04-DD-4444
+status
+leave KA-01-AA-1111 1
+leave KA-03-CC-3333 5
+leave KA-04-DD-4444 2
+status
