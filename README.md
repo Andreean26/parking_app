@@ -1,107 +1,107 @@
-# Parking Lot CLI
+# Sistem Parkir CLI
 
-A command-line parking lot ticketing system implemented in Go. This system manages car parking slots, allocates the nearest available slot, and calculates parking charges based on duration.
+Aplikasi sistem parkir berbasis command-line yang dibuat dengan Go. Sistem ini mengelola slot parkir mobil, mengalokasikan slot terdekat yang tersedia, dan menghitung biaya parkir berdasarkan durasi.
 
-## Overview
+## Deskripsi
 
-This parking lot system:
-- Allocates the nearest available slot (lowest slot number) when a car parks
-- Calculates parking charges: $10 for the first 2 hours, then $10 per additional hour
-- Maintains parking status in memory
-- Reads commands from a text file and outputs results to STDOUT
+Sistem parkir ini:
+- Mengalokasikan slot terdekat yang tersedia (nomor slot terkecil) saat mobil parkir
+- Menghitung biaya parkir: $10 untuk 2 jam pertama, lalu $10 per jam tambahan
+- Menyimpan status parkir di memori
+- Membaca perintah dari file teks dan menampilkan hasil ke STDOUT
 
-## Installation
+## Instalasi
 
-1. Clone this repository:
+1. Clone repository ini:
 ```bash
 git clone https://github.com/Andreean26/parking_app.git
 cd parking_app
 ```
 
-2. No external dependencies needed - uses only Go standard library!
+2. Tidak perlu dependensi eksternal - hanya menggunakan Go standard library!
 
-## Building the Application
+## Build Aplikasi
 
 ### Build executable:
 ```bash
 go build -o parking_app main.go
 ```
 
-On Windows:
+Di Windows:
 ```powershell
 go build -o parking_app.exe main.go
 ```
 
-## Running the Application
+## Menjalankan Aplikasi
 
-### Using go run:
+### Menggunakan go run:
 ```bash
 go run main.go sample\input.txt
 ```
 
-### Using compiled executable:
+### Menggunakan executable yang sudah di-compile:
 ```bash
 ./parking_app sample\input.txt
 ```
 
-On Windows:
+Di Windows:
 ```powershell
 .\parking_app.exe sample\input.txt
 ```
 
-## Project Structure
+## Struktur Project
 
 ```
 parking_app/
-├── main.go                           # Entry point - parses CLI args and runs commands
-├── go.mod                            # Go module definition
-├── .gitignore                        # Git ignore file
-├── README.md                         # Project documentation
-├── parking_app.exe                   # Compiled executable (Windows)
+├── main.go                           # Entry point - parsing argumen CLI dan menjalankan command
+├── go.mod                            # Definisi module Go
+├── .gitignore                        # File git ignore
+├── README.md                         # Dokumentasi project
+├── parking_app.exe                   # Executable hasil compile (Windows)
 ├── models/
-│   ├── car.go                        # Car entity
-│   ├── parking_slot.go               # ParkingSlot entity
-│   └── parking_lot.go                # ParkingLot with min-heap for slot allocation
+│   ├── car.go                        # Entity mobil
+│   ├── parking_slot.go               # Entity slot parkir
+│   └── parking_lot.go                # Logic parking lot dengan min-heap untuk alokasi slot
 ├── controllers/
-│   ├── parking_controller.go         # Business logic for parking operations
-│   └── command_runner.go             # Command processing from input file
+│   ├── parking_controller.go         # Business logic untuk operasi parkir
+│   └── command_runner.go             # Proses command dari input file
 ├── database/
-│   ├── repository.go                 # Repository interface
-│   └── memory_repository.go          # In-memory repository implementation
+│   ├── repository.go                 # Interface repository
+│   └── memory_repository.go          # Implementasi repository di memori
 ├── middleware/
-│   ├── logger.go                     # Logging middleware (debug mode)
-│   └── validator.go                  # Command validation middleware
+│   ├── logger.go                     # Middleware logging (mode debug)
+│   └── validator.go                  # Middleware validasi command
 └── sample/
-    └── input.txt                     # Example input file for testing
+    └── input.txt                     # Contoh file input untuk testing
 ```
 
-## Commands
+## Perintah / Commands
 
-The system supports the following commands:
+Sistem ini mendukung perintah-perintah berikut:
 
 ### create_parking_lot
-Creates a parking lot with N slots.
+Membuat parking lot dengan N slot.
 ```
 create_parking_lot 6
 ```
 **Output:** `Created parking lot with 6 slots`
 
 ### park
-Parks a car with the given registration number.
+Parkir mobil dengan nomor registrasi tertentu.
 ```
 park KA-01-HH-1234
 ```
-**Output:** `Allocated slot number: 1` (or "Sorry, parking lot is full")
+**Output:** `Allocated slot number: 1` (atau "Sorry, parking lot is full")
 
 ### leave
-Removes a car and calculates the parking charge based on hours parked.
+Keluarkan mobil dan hitung biaya parkirnya berdasarkan jam parkir.
 ```
 leave KA-01-HH-1234 4
 ```
-**Output:** `Registration number KA-01-HH-1234 with Slot Number 1 free with Charge $30`
+**Output:** `Registration number KA-01-HH-1234 with Slot Number 1 is free with Charge $30`
 
 ### status
-Displays the current status of all occupied parking slots.
+Menampilkan status semua slot parkir yang terisi.
 ```
 status
 ```
@@ -112,9 +112,9 @@ Slot No.	Registration No.
 2	KA-01-HH-9999
 ```
 
-## Example Input File
+## Contoh File Input
 
-Create a file named `input.txt`:
+Buat file dengan nama `input.txt`:
 ```
 create_parking_lot 6
 park KA-01-HH-1234
@@ -130,9 +130,9 @@ leave DL-12-AA-9999 7
 status
 ```
 
-## Example Output
+## Contoh Output
 
-Running the above input file:
+Menjalankan file input di atas:
 ```
 Created parking lot with 6 slots
 Allocated slot number: 1
@@ -157,15 +157,15 @@ Slot No.	Registration No.
 5	WB-20-EX-1234
 ```
 
-## Pricing Rules
+## Aturan Harga
 
-- **Base rate:** $10 for the first 2 hours
-- **Additional rate:** $10 per hour after the first 2 hours
-- Hours are counted as whole numbers (no fractional hours)
+- **Tarif dasar:** $10 untuk 2 jam pertama
+- **Tarif tambahan:** $10 per jam setelah 2 jam pertama
+- Jam dihitung sebagai angka bulat (tidak ada jam pecahan)
 
-**Examples:**
-- 1 hour = $10
-- 2 hours = $10
-- 3 hours = $20
-- 4 hours = $30
-- 7 hours = $60
+**Contoh:**
+- 1 jam = $10
+- 2 jam = $10
+- 3 jam = $20
+- 4 jam = $30
+- 7 jam = $60
