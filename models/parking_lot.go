@@ -5,15 +5,16 @@ import (
 	"fmt"
 )
 
-// ParkingLot manages parking slots and operations
+// ParkingLot ini struktur utama buat manage parkiran
 type ParkingLot struct {
-	Capacity  int                  // Maximum number of cars
-	Slots     map[int]*ParkingSlot // Map of slot number to ParkingSlot
-	FreeSlots *MinHeap             // Min-heap to track free slot numbers
-	CarToSlot map[string]int       // Map car number to slot number for quick lookup
+	Capacity  int                  // kapasitas maksimal
+	Slots     map[int]*ParkingSlot // semua slot parkir
+	FreeSlots *MinHeap             // heap buat track slot kosong (biar dapet yang terdekat)
+	CarToSlot map[string]int       // map buat cepet nyari mobil ada di slot mana
 }
 
-// MinHeap implements heap.Interface for tracking free slot numbers
+// MinHeap ini buat nyimpen nomor slot yang kosong, diurutkan dari yang terkecil
+// pake heap biar bisa ambil slot terkecil dengan cepet
 type MinHeap []int
 
 func (h MinHeap) Len() int           { return len(h) }
@@ -32,48 +33,55 @@ func (h *MinHeap) Pop() interface{} {
 	return x
 }
 
-// NewParkingLot creates a new parking lot with the given capacity
+// bikin parking lot baru
 func NewParkingLot(capacity int) *ParkingLot {
 	slots := make(map[int]*ParkingSlot)
 	freeSlots := &MinHeap{}
 	heap.Init(freeSlots)
 
-	// Initialize all slots as free
+	// bikin semua slot dari 1 sampe capacity (kapasitas)
 	for i := 1; i <= capacity; i++ {
 		slots[i] = NewParkingSlot(i)
 		heap.Push(freeSlots, i)
 	}
 
-	return &ParkingLot{
+	parkingLot := &ParkingLot{
 		Capacity:  capacity,
 		Slots:     slots,
 		FreeSlots: freeSlots,
 		CarToSlot: make(map[string]int),
 	}
+	
+	return parkingLot
 }
 
-// Park allocates the nearest free slot to the given car
+// Park - masukin mobil ke slot yang paling deket (nomor terkecil)
 func (pl *ParkingLot) Park(car *Car) (int, error) {
+	// cek dulu ada slot kosong ga
 	if pl.FreeSlots.Len() == 0 {
 		return 0, fmt.Errorf("parking lot is full")
 	}
 
-	// Get the lowest free slot number
+	// ambil slot dengan nomor terkecil
 	slotNumber := heap.Pop(pl.FreeSlots).(int)
 	slot := pl.Slots[slotNumber]
 	slot.Park(car)
+	
+	// simpen di map biar gampang nyarinya nanti
 	pl.CarToSlot[car.Number] = slotNumber
 
 	return slotNumber, nil
 }
 
-// Leave removes the car from its slot and returns the slot number
+// Leave - keluarin mobil dari parkiran
 func (pl *ParkingLot) Leave(carNumber string) (int, error) {
+	// cari dulu mobilnya ada di slot mana
 	slotNumber, exists := pl.CarToSlot[carNumber]
 	if !exists {
 		return 0, fmt.Errorf("car not found")
 	}
 
+	// keluarin mobilnya
 	slot := pl.Slots[slotNumber]
 	slot.Leave()
 	delete(pl.CarToSlot, carNumber)
@@ -82,7 +90,6 @@ func (pl *ParkingLot) Leave(carNumber string) (int, error) {
 	return slotNumber, nil
 }
 
-// GetStatus returns a list of occupied slots sorted by slot number
 func (pl *ParkingLot) GetStatus() []struct {
 	SlotNumber int
 	CarNumber  string
@@ -108,8 +115,6 @@ func (pl *ParkingLot) GetStatus() []struct {
 	return status
 }
 
-// CalculateCharge calculates parking charge based on hours
-// $10 for first 2 hours, $10 for each additional hour
 func CalculateCharge(hours int) int {
 	const baseRate = 10
 	const baseHours = 2

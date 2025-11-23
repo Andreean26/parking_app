@@ -7,27 +7,29 @@ import (
 	"strconv"
 )
 
-// ParkingController handles parking lot operations
+// ParkingController ini yang handle semua operasi parkir
 type ParkingController struct {
 	repo database.Repository
 }
 
-// NewParkingController creates a new parking controller
+// bikin controller baru
 func NewParkingController(repo database.Repository) *ParkingController {
-	return &ParkingController{
+	controller := &ParkingController{
 		repo: repo,
 	}
+	return controller
 }
 
-// CreateParkingLot initializes a new parking lot with the given capacity
+// CreateParkingLot - bikin parking lot baru dengan kapasitas tertentu
 func (pc *ParkingController) CreateParkingLot(capacity int) string {
 	lot := models.NewParkingLot(capacity)
 	pc.repo.SetParkingLot(lot)
 	return fmt.Sprintf("Created parking lot with %d slots", capacity)
 }
 
-// Park allocates a parking slot to the given car
+// Park - parkirkan mobil
 func (pc *ParkingController) Park(carNumber string) string {
+	// cek dulu udah ada parking lot belum
 	if !pc.repo.HasParkingLot() {
 		return "Error: Parking lot not created"
 	}
@@ -43,7 +45,7 @@ func (pc *ParkingController) Park(carNumber string) string {
 	return fmt.Sprintf("Allocated slot number: %d", slotNumber)
 }
 
-// Leave removes a car from the parking lot and calculates the charge
+// Leave - keluarin mobil dan hitung biayanya
 func (pc *ParkingController) Leave(carNumber string, hours int) string {
 	if !pc.repo.HasParkingLot() {
 		return "Error: Parking lot not created"
@@ -51,17 +53,19 @@ func (pc *ParkingController) Leave(carNumber string, hours int) string {
 
 	lot := pc.repo.GetParkingLot()
 
+	// cari mobil dan keluarin dari slot
 	slotNumber, err := lot.Leave(carNumber)
 	if err != nil {
 		return fmt.Sprintf("Registration number %s not found", carNumber)
 	}
 
+	// hitung biaya parkirnya
 	charge := models.CalculateCharge(hours)
 	return fmt.Sprintf("Registration number %s with Slot Number %d is free with Charge $%d",
 		carNumber, slotNumber, charge)
 }
 
-// Status returns the current status of the parking lot
+// Status - liat status parking lot sekarang
 func (pc *ParkingController) Status() string {
 	if !pc.repo.HasParkingLot() {
 		return "Error: Parking lot not created"
@@ -70,7 +74,10 @@ func (pc *ParkingController) Status() string {
 	lot := pc.repo.GetParkingLot()
 	status := lot.GetStatus()
 
+	// bikin header
 	result := "Slot No.\tRegistration No."
+
+	// tambahin data slot yang terisi
 	for _, s := range status {
 		result += fmt.Sprintf("\n%d\t%s", s.SlotNumber, s.CarNumber)
 	}
@@ -78,7 +85,7 @@ func (pc *ParkingController) Status() string {
 	return result
 }
 
-// ParseAndExecuteCommand parses a command line and executes the appropriate action
+// ParseAndExecuteCommand - parse command dari input terus execute
 func (pc *ParkingController) ParseAndExecuteCommand(args []string) (string, error) {
 	if len(args) == 0 {
 		return "", fmt.Errorf("empty command")
@@ -86,6 +93,7 @@ func (pc *ParkingController) ParseAndExecuteCommand(args []string) (string, erro
 
 	command := args[0]
 
+	// cek command apa yang diminta
 	switch command {
 	case "create_parking_lot":
 		if len(args) < 2 {

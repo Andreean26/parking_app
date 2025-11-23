@@ -5,34 +5,39 @@ import (
 	"sync"
 )
 
-// MemoryRepository implements Repository interface with in-memory storage
+// MemoryRepository nyimpen data parking lot di memory
 type MemoryRepository struct {
 	parkingLot *models.ParkingLot
-	mu         sync.RWMutex // Mutex for thread-safe access
+	mu         sync.RWMutex // mutex buat jaga-jaga kalo multi-thread
 }
 
-// NewMemoryRepository creates a new in-memory repository
+// bikin repository baru
 func NewMemoryRepository() *MemoryRepository {
-	return &MemoryRepository{}
+	repo := &MemoryRepository{}
+	return repo
 }
 
-// GetParkingLot returns the current parking lot instance
+// ambil parking lot yang ada sekarang
 func (mr *MemoryRepository) GetParkingLot() *models.ParkingLot {
 	mr.mu.RLock()
 	defer mr.mu.RUnlock()
 	return mr.parkingLot
 }
 
-// SetParkingLot sets a new parking lot instance
+// set parking lot baru
 func (mr *MemoryRepository) SetParkingLot(lot *models.ParkingLot) {
 	mr.mu.Lock()
 	defer mr.mu.Unlock()
 	mr.parkingLot = lot
 }
 
-// HasParkingLot checks if a parking lot has been initialized
+// cek udah ada parking lot belum
 func (mr *MemoryRepository) HasParkingLot() bool {
 	mr.mu.RLock()
 	defer mr.mu.RUnlock()
-	return mr.parkingLot != nil
+
+	if mr.parkingLot != nil {
+		return true
+	}
+	return false
 }

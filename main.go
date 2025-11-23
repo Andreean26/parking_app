@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	// Check if input file is provided
+	// cek dulu ada input file ga
 	if len(os.Args) < 2 {
 		fmt.Fprintln(os.Stderr, "Usage: parking_app <input_file>")
 		fmt.Fprintln(os.Stderr, "Example: parking_app input.txt")
@@ -17,7 +17,7 @@ func main() {
 
 	inputFile := os.Args[1]
 
-	// Open the input file
+	// buka file input
 	file, err := os.Open(inputFile)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error opening file: %v\n", err)
@@ -25,14 +25,14 @@ func main() {
 	}
 	defer file.Close()
 
-	// Initialize repository and controller
+	// setup repository dan controller
 	repo := database.NewMemoryRepository()
 	parkingController := controllers.NewParkingController(repo)
 
-	// Create command runner
+	// bikin command runner
 	runner := controllers.NewCommandRunner(parkingController)
 
-	// Run commands from the file
+	// jalankan semua command dari file
 	if err := runner.Run(file); err != nil {
 		fmt.Fprintf(os.Stderr, "Error processing commands: %v\n", err)
 		os.Exit(1)

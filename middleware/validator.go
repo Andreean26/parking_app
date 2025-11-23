@@ -4,15 +4,15 @@ import (
 	"fmt"
 )
 
-// Validator provides validation for commands
+// Validator buat validasi command sebelum dijalankan
 type Validator struct{}
 
-// NewValidator creates a new validator instance
+// bikin validator baru
 func NewValidator() *Validator {
 	return &Validator{}
 }
 
-// ValidateCommand validates that a command has the correct structure
+// cek apakah command valid
 func (v *Validator) ValidateCommand(args []string) error {
 	if len(args) == 0 {
 		return fmt.Errorf("empty command")
@@ -20,6 +20,7 @@ func (v *Validator) ValidateCommand(args []string) error {
 
 	command := args[0]
 
+	// cek tiap command punya argument yang cukup ga
 	switch command {
 	case "create_parking_lot":
 		if len(args) < 2 {
@@ -34,7 +35,7 @@ func (v *Validator) ValidateCommand(args []string) error {
 			return fmt.Errorf("leave requires 2 arguments: car_number and hours")
 		}
 	case "status":
-		// status command requires no arguments
+		// status ga butuh argument
 	default:
 		return fmt.Errorf("unknown command: %s", command)
 	}

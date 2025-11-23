@@ -1,30 +1,34 @@
 package models
 
-// ParkingSlot represents a single parking slot in the lot
+// ParkingSlot itu satu slot parkir
 type ParkingSlot struct {
-	Number int  // Slot number starting from 1
-	Car    *Car // Car occupying the slot or nil if free
+	Number int  // nomor slot
+	Car    *Car // mobil yang parkir disini, nil kalo kosong
 }
 
-// NewParkingSlot creates a new empty parking slot
+// bikin slot parkir baru (masih kosong)
 func NewParkingSlot(number int) *ParkingSlot {
-	return &ParkingSlot{
+	slot := &ParkingSlot{
 		Number: number,
 		Car:    nil,
 	}
+	return slot
 }
 
-// IsFree returns true if the slot is available
+// cek apakah slot ini kosong
 func (ps *ParkingSlot) IsFree() bool {
-	return ps.Car == nil
+	if ps.Car == nil {
+		return true
+	}
+	return false
 }
 
-// Park assigns a car to this slot
+// masukin mobil ke slot ini
 func (ps *ParkingSlot) Park(car *Car) {
 	ps.Car = car
 }
 
-// Leave removes the car from this slot
+// keluarin mobil dari slot ini
 func (ps *ParkingSlot) Leave() *Car {
 	car := ps.Car
 	ps.Car = nil

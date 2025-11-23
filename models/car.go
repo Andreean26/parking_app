@@ -1,23 +1,25 @@
 package models
 
-// Car represents a vehicle with a registration number and color
+// Car struct untuk nyimpen data mobil
 type Car struct {
-	Number string // Registration number (e.g., "KA-01-HH-1234")
-	Color  string // Car color (optional, for future use)
+	Number string // nomor plat mobil
+	Color  string // warna mobil (belum kepake sih)
 }
 
-// NewCar creates a new Car instance with registration number only
+// bikin mobil baru
 func NewCar(number string) *Car {
-	return &Car{
+	car := &Car{
 		Number: number,
-		Color:  "", // Color not used in current implementation
+		Color:  "",
 	}
+	return car
 }
 
-// NewCarWithColor creates a new Car instance with registration number and color
+// kalo mau bikin mobil dengan warna juga
 func NewCarWithColor(number, color string) *Car {
-	return &Car{
+	car := &Car{
 		Number: number,
 		Color:  color,
 	}
+	return car
 }
