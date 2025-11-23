@@ -36,17 +36,17 @@ go build -o parking_app.exe main.go
 
 ### Using go run:
 ```bash
-go run main.go  (sample\input.txt)
+go run main.go sample\input.txt
 ```
 
 ### Using compiled executable:
 ```bash
-./parking_app (sample\input.txt)
+./parking_app sample\input.txt
 ```
 
 On Windows:
 ```powershell
-.\parking_app.exe (sample\input.txt)
+.\parking_app.exe sample\input.txt
 ```
 
 ## Project Structure
