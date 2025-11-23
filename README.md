@@ -10,15 +10,11 @@ This parking lot system:
 - Maintains parking status in memory
 - Reads commands from a text file and outputs results to STDOUT
 
-## Prerequisites
-
-- Go 1.21 or newer
-
 ## Installation
 
 1. Clone this repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/Andreean26/parking_app.git
 cd parking_app
 ```
 
@@ -40,17 +36,17 @@ go build -o parking_app.exe main.go
 
 ### Using go run:
 ```bash
-go run main.go <input_file>
+go run main.go  (sample\input.txt)
 ```
 
 ### Using compiled executable:
 ```bash
-./parking_app <input_file>
+./parking_app (sample\input.txt)
 ```
 
 On Windows:
 ```powershell
-.\parking_app.exe <input_file>
+.\parking_app.exe (sample\input.txt)
 ```
 
 ## Project Structure
@@ -59,6 +55,9 @@ On Windows:
 parking_app/
 ├── main.go                           # Entry point - parses CLI args and runs commands
 ├── go.mod                            # Go module definition
+├── .gitignore                        # Git ignore file
+├── README.md                         # Project documentation
+├── parking_app.exe                   # Compiled executable (Windows)
 ├── models/
 │   ├── car.go                        # Car entity
 │   ├── parking_slot.go               # ParkingSlot entity
@@ -72,7 +71,8 @@ parking_app/
 ├── middleware/
 │   ├── logger.go                     # Logging middleware (debug mode)
 │   └── validator.go                  # Command validation middleware
-└── README.md
+└── sample/
+    └── input.txt                     # Example input file for testing
 ```
 
 ## Commands
@@ -169,44 +169,3 @@ Slot No.	Registration No.
 - 3 hours = $20
 - 4 hours = $30
 - 7 hours = $60
-
-## Debug Mode
-
-To enable debug logging (logs to STDERR), set the DEBUG environment variable:
-
-```bash
-DEBUG=true go run main.go input.txt
-```
-
-On Windows PowerShell:
-```powershell
-$env:DEBUG="true"; go run main.go input.txt
-```
-
-## Testing
-
-Run tests (if test files are added):
-```bash
-go test ./...
-```
-
-Run tests with coverage:
-```bash
-go test -cover ./...
-```
-
-## Design Decisions
-
-1. **Min-Heap for Slot Allocation:** Uses Go's `container/heap` to efficiently track and allocate the lowest available slot number in O(log n) time.
-
-2. **In-Memory Storage:** Implements a simple in-memory repository pattern that can be extended to use a real database in the future.
-
-3. **Middleware Pattern:** Includes logger and validator middleware to demonstrate separation of concerns, even though this is a simple CLI.
-
-4. **Clean Architecture:** Separates concerns into layers: models (domain), controllers (business logic), database (persistence), and middleware (cross-cutting concerns).
-
-5. **Standard Library Only:** No external dependencies, making the application lightweight and easy to deploy.
-
-## License
-
-This is a coding test project.

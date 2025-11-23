@@ -30,40 +30,31 @@ func (cr *CommandRunner) Run(reader io.Reader) error {
 	scanner := bufio.NewScanner(reader)
 	lineNumber := 0
 
-	// baca file line by line
 	for scanner.Scan() {
 		lineNumber++
 		line := strings.TrimSpace(scanner.Text())
 
-		// skip kalo baris kosong
 		if line == "" {
 			continue
 		}
 
-		// log command yang dibaca (kalo debug mode)
 		cr.logger.LogCommand(line)
-
-		// split command jadi array
 		args := strings.Fields(line)
 
-		// validasi dulu commandnya
 		if err := cr.validator.ValidateCommand(args); err != nil {
 			cr.logger.LogError(lineNumber, err)
 			continue
 		}
 
-		// execute command
 		output, err := cr.controller.ParseAndExecuteCommand(args)
 		if err != nil {
 			cr.logger.LogError(lineNumber, err)
 			continue
 		}
 
-		// print hasilnya
 		fmt.Println(output)
 	}
 
-	// cek kalo ada error pas baca file
 	if err := scanner.Err(); err != nil {
 		return fmt.Errorf("error reading input: %w", err)
 	}

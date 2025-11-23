@@ -29,7 +29,6 @@ func (pc *ParkingController) CreateParkingLot(capacity int) string {
 
 // Park - parkirkan mobil
 func (pc *ParkingController) Park(carNumber string) string {
-	// cek dulu udah ada parking lot belum
 	if !pc.repo.HasParkingLot() {
 		return "Error: Parking lot not created"
 	}
@@ -52,14 +51,11 @@ func (pc *ParkingController) Leave(carNumber string, hours int) string {
 	}
 
 	lot := pc.repo.GetParkingLot()
-
-	// cari mobil dan keluarin dari slot
 	slotNumber, err := lot.Leave(carNumber)
 	if err != nil {
 		return fmt.Sprintf("Registration number %s not found", carNumber)
 	}
 
-	// hitung biaya parkirnya
 	charge := models.CalculateCharge(hours)
 	return fmt.Sprintf("Registration number %s with Slot Number %d is free with Charge $%d",
 		carNumber, slotNumber, charge)
@@ -74,10 +70,7 @@ func (pc *ParkingController) Status() string {
 	lot := pc.repo.GetParkingLot()
 	status := lot.GetStatus()
 
-	// bikin header
 	result := "Slot No.\tRegistration No."
-
-	// tambahin data slot yang terisi
 	for _, s := range status {
 		result += fmt.Sprintf("\n%d\t%s", s.SlotNumber, s.CarNumber)
 	}
@@ -93,7 +86,6 @@ func (pc *ParkingController) ParseAndExecuteCommand(args []string) (string, erro
 
 	command := args[0]
 
-	// cek command apa yang diminta
 	switch command {
 	case "create_parking_lot":
 		if len(args) < 2 {

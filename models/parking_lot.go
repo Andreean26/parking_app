@@ -39,7 +39,6 @@ func NewParkingLot(capacity int) *ParkingLot {
 	freeSlots := &MinHeap{}
 	heap.Init(freeSlots)
 
-	// bikin semua slot dari 1 sampe capacity (kapasitas)
 	for i := 1; i <= capacity; i++ {
 		slots[i] = NewParkingSlot(i)
 		heap.Push(freeSlots, i)
@@ -51,23 +50,19 @@ func NewParkingLot(capacity int) *ParkingLot {
 		FreeSlots: freeSlots,
 		CarToSlot: make(map[string]int),
 	}
-	
+
 	return parkingLot
 }
 
 // Park - masukin mobil ke slot yang paling deket (nomor terkecil)
 func (pl *ParkingLot) Park(car *Car) (int, error) {
-	// cek dulu ada slot kosong ga
 	if pl.FreeSlots.Len() == 0 {
 		return 0, fmt.Errorf("parking lot is full")
 	}
 
-	// ambil slot dengan nomor terkecil
 	slotNumber := heap.Pop(pl.FreeSlots).(int)
 	slot := pl.Slots[slotNumber]
 	slot.Park(car)
-	
-	// simpen di map biar gampang nyarinya nanti
 	pl.CarToSlot[car.Number] = slotNumber
 
 	return slotNumber, nil
@@ -75,13 +70,11 @@ func (pl *ParkingLot) Park(car *Car) (int, error) {
 
 // Leave - keluarin mobil dari parkiran
 func (pl *ParkingLot) Leave(carNumber string) (int, error) {
-	// cari dulu mobilnya ada di slot mana
 	slotNumber, exists := pl.CarToSlot[carNumber]
 	if !exists {
 		return 0, fmt.Errorf("car not found")
 	}
 
-	// keluarin mobilnya
 	slot := pl.Slots[slotNumber]
 	slot.Leave()
 	delete(pl.CarToSlot, carNumber)
@@ -90,38 +83,39 @@ func (pl *ParkingLot) Leave(carNumber string) (int, error) {
 	return slotNumber, nil
 }
 
-func (pl *ParkingLot) GetStatus() []struct {
+// struct buat nyimpen info status slot
+type SlotStatus struct {
 	SlotNumber int
 	CarNumber  string
-} {
-	var status []struct {
-		SlotNumber int
-		CarNumber  string
-	}
+}
+
+// GetStatus - ambil list semua slot yang terisi
+func (pl *ParkingLot) GetStatus() []SlotStatus {
+	var status []SlotStatus
 
 	for i := 1; i <= pl.Capacity; i++ {
 		slot := pl.Slots[i]
-		if !slot.IsFree() {
-			status = append(status, struct {
-				SlotNumber int
-				CarNumber  string
-			}{
+		if slot.IsFree() == false {
+			info := SlotStatus{
 				SlotNumber: slot.Number,
 				CarNumber:  slot.Car.Number,
-			})
+			}
+			status = append(status, info)
 		}
 	}
 
 	return status
 }
 
+// CalculateCharge - hitung biaya parkir berdasarkan jam
 func CalculateCharge(hours int) int {
-	const baseRate = 10
-	const baseHours = 2
-	const additionalRate = 10
-
-	if hours <= baseHours {
-		return baseRate
+	if hours <= 2 {
+		return 10
 	}
-	return baseRate + (hours-baseHours)*additionalRate
+
+	extraHours := hours - 2
+	extraCharge := extraHours * 10
+	totalCharge := 10 + extraCharge
+
+	return totalCharge
 }

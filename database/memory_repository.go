@@ -35,7 +35,6 @@ func (mr *MemoryRepository) SetParkingLot(lot *models.ParkingLot) {
 func (mr *MemoryRepository) HasParkingLot() bool {
 	mr.mu.RLock()
 	defer mr.mu.RUnlock()
-
 	if mr.parkingLot != nil {
 		return true
 	}
